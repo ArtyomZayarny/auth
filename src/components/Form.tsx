@@ -8,6 +8,7 @@ export default function Form() {
 
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+    console.log('ts')
     setFrom({ ...form, [e.currentTarget.name]: e.currentTarget.value })
   }
 
