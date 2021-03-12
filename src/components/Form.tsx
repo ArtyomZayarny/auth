@@ -35,7 +35,11 @@ export default function Form() {
           onChange={handleChange}
         />
       </label>
-      <input type="submit" value={btnName} />
+      <input
+        type="submit"
+        value={btnName}
+        disabled={false}
+      />
     </form>
   )
 }
