@@ -1,0 +1,11 @@
+.header {
+  background-color: gray;
+  .content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .signup {
+    margin-left: 15px;
+  }
+}

@@ -1,57 +1,45 @@
 import { useState } from 'react'
 import { useHttp } from '../hooks/useHttp'
+import { useForm } from "react-hook-form";
+
+
+type Inputs = {
+  example: string,
+  exampleRequired: string,
+};
+
+type Credentials = {
+  username: string,
+  password: string
+}
 
 export default function Form() {
 
-  const [form, setFrom] = useState({
-    email: '',
-    password: ''
-  })
   const { request } = useHttp()
-
-
-  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setFrom({ ...form, [e.currentTarget.name]: e.currentTarget.value })
-  }
-
-  const handleSubmit = () => {
-    const url = '/auth/signin/'
+  const sigUpRequest = async (data: Credentials): Promise<void> => {
+    const url = '/auth/signup'
 
     try {
-      const data = request(url, "POST", { ...form })
+      const response = await request(url, { ...data })
+      console.log(response)
     } catch (e) {
       console.warn(e)
     }
   }
 
   const btnName = 'SignIn'
+
+  const { register, handleSubmit, watch, errors } = useForm<Inputs>();
+  const onSubmit = (data: any) => sigUpRequest(data);
+
+
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Email:
-        <input
-          autoComplete="off"
-          type="text"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        Password:
-        <input
-          autoComplete="off"
-          type="password"
-          name="password"
-          value={form.password}
-          onChange={handleChange}
-        />
-      </label>
-      <input
-        type="submit"
-        value={btnName}
-        disabled={false}
-      />
-    </form>
+
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input name="username" ref={register} autoComplete="off" />
+      <input name="password" type="password" ref={register({ required: true })} />
+      {errors.exampleRequired && <span>This field is required</span>}
+      <input type="submit" value={btnName} />
+    </form >
   )
 }

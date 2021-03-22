@@ -1,12 +1,17 @@
-import Main from '../components/Main'
-import Header from '../components/Header'
-import styles from './App.module.css'
+import { BrowserRouter as Router } from 'react-router-dom'
+import Header from '../components/Header/Header'
+import { useRoutes } from '../hooks/useRoutes';
+import styles from './App.module.scss'
 
 export default function App() {
+  const isAuthenticated = false;
+  const routes = useRoutes(isAuthenticated)
   return (
-    <div className={styles.app}>
-      <Header />
-      <Main />
+    <div className={styles['app']}>
+      <Router>
+        <Header />
+        {routes}
+      </Router>
     </div>
   );
 }
