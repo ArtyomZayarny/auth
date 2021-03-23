@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Button } from 'antd'
 import { useHttp } from '../hooks/useHttp'
 import { useForm } from "react-hook-form";
 
@@ -12,8 +13,11 @@ type Credentials = {
   username: string,
   password: string
 }
+type FormProps = {
+  name: string,
+}
 
-export default function Form() {
+const Form: React.FC<FormProps> = ({ name }) => {
 
   const { request } = useHttp()
   const sigUpRequest = async (data: Credentials): Promise<void> => {
@@ -26,20 +30,32 @@ export default function Form() {
       console.warn(e)
     }
   }
-
-  const btnName = 'SignIn'
+  const signInRequest = async (data: Credentials) => {
+    const url = '/auth/sigin'
+    try {
+      const response = await request(url, { ...data })
+      console.log(response)
+    } catch (e) {
+      console.warn(e)
+    }
+  }
 
   const { register, handleSubmit, watch, errors } = useForm<Inputs>();
-  const onSubmit = (data: any) => sigUpRequest(data);
+  const onSubmit = (data: any) => name === 'signup' ? sigUpRequest(data) : signInRequest(data);
 
 
   return (
 
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input name="username" ref={register} autoComplete="off" />
-      <input name="password" type="password" ref={register({ required: true })} />
+      <label htmlFor="Email"> Email
+        <input id="email" name="username" ref={register} autoComplete="off" />
+      </label>
+      <label htmlFor="password">Password
+        <input id="password" name="password" type="password" ref={register({ required: true })} />
+      </label>
       {errors.exampleRequired && <span>This field is required</span>}
-      <input type="submit" value={btnName} />
+      <Button type="primary" htmlType="submit">name</Button>
     </form >
   )
 }
+export default Form
