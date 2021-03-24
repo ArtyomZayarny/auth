@@ -1,7 +1,9 @@
-import Form from "../components/Form"
+import AuthForm from "../components/AuthForm"
 
 export const LoginPage = () => {
   return (<>
-    <Form name="login" />
+    <div className="content">
+      <AuthForm name="login" />
+    </div>
   </>)
 }
