@@ -8,7 +8,7 @@ import { LoginPage } from '../pages/LoginPage'
 
 export const useRoutes = (auth: boolean) => {
 
-  if (auth) {
+  if (!auth) {
     return (
       <Switch>
         <Route path="/" exact>

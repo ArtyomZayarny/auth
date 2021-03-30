@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Form, Input, Button, Checkbox } from 'antd';
 import { useHttp } from '../hooks/useHttp'
+import { SIGNIN_URL, STORAGE_NAME } from '../consts';
+import { AuthContext } from '../App/context/AuthContext';
 
 
 type Credentials = {
@@ -21,8 +23,9 @@ const tailLayout = {
 };
 
 const AuthForm: React.FC<FormProps> = ({ name }) => {
-
-  const { request } = useHttp()
+  const auth = useContext(AuthContext)
+  const LS = localStorage;
+  const { request, error } = useHttp()
   const sigUpRequest = async (data: Credentials): Promise<void> => {
     const url = '/auth/signup'
 
@@ -34,16 +37,19 @@ const AuthForm: React.FC<FormProps> = ({ name }) => {
     }
   }
   const signInRequest = async (data: Credentials) => {
-    const url = '/auth/signin'
     try {
-      const response = await request(url, { ...data })
-      console.log(response)
+      const response = await request(SIGNIN_URL, { ...data })
+      if (!error) {
+        auth.login(response.accessToken)
+      }
     } catch (e) {
       console.warn(e)
     }
   }
 
-  const onSubmit = (data: any) => name === 'signup' ? sigUpRequest(data) : signInRequest(data);
+  const onSubmit = (data: any) => name === 'signup' ?
+    sigUpRequest(data) :
+    signInRequest(data);
 
   const onFinish = (values: any) => {
     onSubmit(values);
